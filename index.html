@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Endemic</title>
+<meta name="description" content="Endemic builds next-gen education institutions and R&D ecosystems, in partnership with a host city.">
+<link rel="icon" type="image/svg+xml" href="/assets/endemic-emblem.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400&family=Courier+Prime:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;600&family=Instrument+Serif:ital@0;1&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Serif:wght@700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ------------------------------------------------------------
+   ENDEMIC — tokens
+   Civic structure, analog surface.
+   Public Sans = the institution. Courier Prime = working notes.
+   ------------------------------------------------------------ */
+:root{
+  --paper:#E8E9E2;      /* survey paper, cool not cream */
+  --panel:#DDDFD5;
+  --ink:#1A1C19;
+  --muted:#5A5E56;
+  --rule:#BDBFB5;
+  --accent:#3B5B47;     /* ledger green */
+  --sans:"Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --notes:"Courier Prime", "Courier New", Courier, monospace;
+  --measure:68ch;
+  --gutter:clamp(20px, 4vw, 56px);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1A1C19; --panel:#23261F; --ink:#E6E7DF; --muted:#A2A69B; --rule:#3A3E36; --accent:#93B79E;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1A1C19; --panel:#23261F; --ink:#E6E7DF; --muted:#A2A69B; --rule:#3A3E36; --accent:#93B79E;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top, 0px); -webkit-text-size-adjust:100%}
+body{
+  margin:0; min-height:100%;
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:18px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+/* barely-there paper grain */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:100; opacity:.07; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+img{max-width:100%; height:auto}
+a{color:inherit; text-decoration-thickness:1px; text-underline-offset:.18em}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+.wrap{max-width:1280px; margin:0 auto; padding:0 var(--gutter)}
+.visually-hidden{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ---------- header ---------- */
+.site-head{border-bottom:1px solid var(--rule)}
+.site-head .wrap{display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:64px}
+.wordmark-sm{font-weight:900; letter-spacing:.14em; font-size:15px; text-decoration:none}
+.nav{display:flex; gap:clamp(16px,3vw,36px); font-size:15px}
+.nav a{text-decoration:none; padding:6px 0; border-bottom:1px solid transparent}
+.nav a[aria-current="page"]{border-bottom-color:var(--ink)}
+.nav a:hover{border-bottom-color:var(--accent)}
+
+/* ---------- pages ---------- */
+.page{display:none}
+.page.is-active{display:block}
+
+/* ---------- home: the inscription ---------- */
+.inscription{padding-top:clamp(40px,8vw,104px)}
+.inscription h1{
+  margin:0; font-weight:900; text-transform:uppercase;
+  font-size:clamp(56px, 19vw, 250px); white-space:nowrap; line-height:.82; letter-spacing:-.035em;
+  /* set like letters cut into a lintel */
+}
+.inscription .rule{height:1px; background:var(--ink); margin:clamp(20px,3vw,36px) 0 0}
+.thesis{
+  display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:var(--gutter);
+  padding-top:clamp(28px,4vw,48px); padding-bottom:clamp(64px,10vw,128px);
+}
+.thesis .tagline{margin:0; font-size:clamp(22px,2.3vw,30px); line-height:1.2; font-weight:700; max-width:16em}
+.thesis .statement{margin:0; max-width:var(--measure); font-size:clamp(18px,1.45vw,21px); line-height:1.6}
+.thesis .statement p{margin:0 0 1em}
+.thesis .statement p:last-child{margin-bottom:0}
+
+/* ---------- gallery ---------- */
+.gallery{border-top:1px solid var(--ink); padding-top:clamp(28px,4vw,48px); padding-bottom:clamp(72px,10vw,128px)}
+.gallery-head{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:var(--gutter); margin-bottom:clamp(28px,4vw,48px)}
+.gallery-head h2{margin:0; font-size:clamp(22px,2.3vw,30px); line-height:1.2; font-weight:700}
+.gallery-head p{margin:0; color:var(--muted); max-width:52ch}
+.plaques{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(16px,2vw,28px); align-items:start}
+
+.plaque{border:1px solid var(--ink); background:var(--paper); scroll-margin-top:24px}
+.plaque .brand{aspect-ratio:4/5; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(20px,2.4vw,32px); position:relative; overflow:hidden}
+.plaque .meta{display:grid; grid-template-columns:1fr 1fr; margin:0; border-top:1px solid var(--ink)}
+.plaque .meta div{padding:12px 16px}
+.plaque .meta div + div{border-left:1px solid var(--rule)}
+.plaque .meta dt{font-size:13px; color:var(--muted)}
+.plaque .meta dd{margin:0; font-size:15px; font-weight:500}
+.plaque .actions{display:flex; border-top:1px solid var(--rule)}
+.plaque .actions > *{flex:1; padding:14px 16px; font:500 15px/1.2 var(--sans); color:var(--ink); background:none; border:0; text-align:left; cursor:pointer; text-decoration:none}
+.plaque .actions > * + *{border-left:1px solid var(--rule)}
+.plaque .actions > *:hover{background:var(--panel); color:var(--ink)}
+.status-toggle .sign{float:right; transition:transform .25s ease}
+.status-toggle[aria-expanded="true"] .sign{transform:rotate(45deg)}
+.plaque .actions a[aria-disabled="true"]{color:var(--muted); cursor:default}
+.plaque .actions a[aria-disabled="true"]:hover{background:none}
+
+/* status report = working notes pinned to the plaque */
+.report{border-top:1px solid var(--ink); background:var(--panel); font-family:var(--notes); font-size:15px; line-height:1.5; padding:18px 16px 20px}
+.report[hidden]{display:none}
+.report dl{margin:0}
+.report dt{font-weight:700; margin-top:14px}
+.report dt:first-child{margin-top:0}
+.report dd{margin:2px 0 0}
+.report ul{margin:2px 0 0; padding-left:1.1em}
+.report li{margin:2px 0}
+.report .todo{color:var(--muted); font-style:italic}
+.report .stamp{margin-top:16px; padding-top:10px; border-top:1px dashed var(--rule); color:var(--muted); font-size:13px}
+
+/* --- brand world: The Divinity School (placeholder treatment) --- */
+.brand-tds{background:#15201B; color:#E9E2CF; font-family:"EB Garamond", Garamond, Georgia, serif}
+.brand-tds .mark{width:56px; height:56px}
+.brand-tds .name{font-size:clamp(30px,2.9vw,40px); line-height:1.02; font-weight:400; margin:0}
+.brand-tds .line{font-style:italic; font-size:18px; line-height:1.35; margin:12px 0 0; color:#C9C1AA; max-width:22ch}
+
+/* --- brand world: The Uncontainability Project (from its style guide) --- */
+.brand-unc{background:#f6f3ec; color:#14141f; font-family:"Source Sans 3", system-ui, sans-serif; isolation:isolate}
+.brand-unc::before{content:""; position:absolute; inset:0; z-index:-1;
+  background:
+    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(91,60,196,.22), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 100% 100%, rgba(232,93,76,.18), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(42,157,143,.12), transparent 60%);}
+.brand-unc::after{content:""; position:absolute; inset:0; z-index:-1; opacity:.18; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .8 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");}
+.brand-unc .lockup{display:flex; align-items:center; gap:12px; color:#1a1a6e; text-decoration:none}
+.brand-unc .lockup:hover{color:#1a1a6e}
+.brand-unc .unc-mark{width:40px; height:40px; flex-shrink:0; overflow:visible}
+.brand-unc .kicker{font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; line-height:1.4}
+.brand-unc .name{font-family:"Instrument Serif", Georgia, serif; font-weight:400; font-size:clamp(34px,3.3vw,46px); line-height:1.02; letter-spacing:-.02em; margin:0; color:#14141f}
+.brand-unc .name em{font-style:italic}
+.brand-unc .line{font-size:16px; line-height:1.45; margin:14px 0 0; max-width:28ch; color:#4a4a5a}
+.brand-unc .domain{font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px; letter-spacing:.06em; color:#8a8a9a; margin:18px 0 0}
+/* the site's own hover: the ring fills faintly and the node escapes in coral */
+.mark-fill{opacity:0; transition:opacity .65s}
+.mark-node{transform-box:fill-box; transform-origin:50% center; transition:fill .45s, transform .75s cubic-bezier(.34,1.2,.64,1)}
+.mark-animate:hover .mark-fill, .mark-animate:focus-within .mark-fill{opacity:.12}
+.mark-animate:hover .mark-node, .mark-animate:focus-within .mark-node{fill:#e85d4c; transform:translate(10px,-9px) scale(1.08)}
+
+/* --- brand world: Endemic Culinary Institute (from culinary.endemic.org) --- */
+.brand-eci{color:#F9F8F6; font-family:"IBM Plex Sans", system-ui, sans-serif; background:#272016 url("/assets/culinary-poster.jpg") center/cover no-repeat; isolation:isolate}
+.brand-eci::before{content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(to bottom, rgba(39,32,22,.55), rgba(39,32,22,.35) 35%, rgba(39,32,22,.82) 100%)}
+.brand-eci .bg-video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; pointer-events:none}
+.brand-eci .wordmark{font-family:"IBM Plex Serif", Georgia, serif; font-weight:700; font-size:14px; letter-spacing:-.01em; text-transform:uppercase}
+.brand-eci .name{font-family:"IBM Plex Serif", Georgia, serif; font-weight:700; font-size:clamp(30px,2.9vw,40px); line-height:1.08; letter-spacing:-.02em; margin:0}
+.brand-eci .line{font-size:16px; line-height:1.5; margin:12px 0 0; max-width:30ch; color:rgba(249,248,246,.9)}
+
+/* ---------- interior pages ---------- */
+.interior{padding-top:clamp(48px,8vw,96px); padding-bottom:clamp(72px,10vw,128px)}
+.interior h1{margin:0 0 .4em; font-size:clamp(44px,7vw,96px); line-height:.92; font-weight:900; letter-spacing:-.03em}
+.interior .lede{font-size:clamp(20px,1.8vw,24px); line-height:1.45; max-width:36ch; margin:0}
+.split{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:var(--gutter); border-top:1px solid var(--ink); margin-top:clamp(36px,5vw,64px); padding-top:clamp(28px,4vw,48px)}
+.split h2{margin:0; font-size:clamp(20px,1.9vw,26px); line-height:1.2}
+.prose{max-width:var(--measure)}
+.prose p{margin:0 0 1em}
+
+form.contact{display:grid; gap:18px; max-width:44rem}
+.field{display:grid; gap:6px}
+.field label{font-size:15px; font-weight:500}
+.field input,.field select,.field textarea{
+  font:inherit; font-size:17px; color:var(--ink); background:transparent;
+  border:0; border-bottom:1px solid var(--ink); padding:8px 0; border-radius:0; width:100%;
+}
+.field textarea{min-height:140px; resize:vertical; border:1px solid var(--ink); padding:10px}
+.field select{appearance:none; background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%); background-position:calc(100% - 14px) 55%, calc(100% - 9px) 55%; background-size:5px 5px; background-repeat:no-repeat}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none; border-color:var(--accent); box-shadow:0 1px 0 var(--accent)}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.btn{font:700 16px/1 var(--sans); background:var(--ink); color:var(--paper); border:1px solid var(--ink); padding:16px 22px; cursor:pointer; justify-self:start}
+.btn:hover{background:var(--accent); border-color:var(--accent); color:var(--paper)}
+.note{font-size:14px; color:var(--muted); margin:0}
+.form-msg{font-family:var(--notes); font-size:15px; margin:0}
+
+.give-jump{margin:20px 0 0; font-weight:700}
+.donate-grid{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:var(--gutter); border-top:1px solid var(--ink); margin-top:clamp(36px,5vw,64px); padding-top:clamp(28px,4vw,48px); align-items:start}
+.donate-essay{font-size:18px; line-height:1.65}
+.donate-ref{font-size:14px; color:var(--muted); margin-top:2em!important}
+.donate-form{position:sticky; top:24px; scroll-margin-top:24px}
+.donate-form iframe{display:block; width:100%; height:900px; border:0; background:#fff}
+@media (max-width: 960px){ .donate-grid{grid-template-columns:1fr} .donate-form{position:static} }
+.embed-slot{border:1px dashed var(--muted); padding:clamp(24px,4vw,48px); font-family:var(--notes); color:var(--muted); min-height:320px; display:flex; align-items:center; justify-content:center; text-align:center}
+
+/* ---------- vision (deliberately darker) ---------- */
+#page-vision{background:#141512; color:#E4E1D6; --v-muted:#9C9A8E; --v-rule:#34352F; --v-accent:#C6B58A}
+#page-vision a:hover{color:var(--v-accent)}
+.v-hero{position:relative; border-bottom:1px solid var(--v-rule)}
+.v-art{position:relative; height:min(78vh, 70vw); min-height:300px; overflow:hidden; background:#1C1D19}
+.v-art img{display:block; width:100%; height:100%; object-fit:cover}
+.v-art img{object-position:50% 88%}
+.v-art .missing{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--notes); font-size:14px; color:var(--v-muted); border:1px dashed var(--v-muted); padding:10px 14px; text-align:center}
+.v-hero .wrap{position:relative; padding-top:clamp(28px,4vw,44px); padding-bottom:clamp(28px,4vw,48px)}
+.v-hero .kicker{font-size:clamp(16px,1.6vw,20px); margin:0 0 .4em; color:#CFCBBE}
+.v-hero h1{margin:0; font-weight:900; text-transform:uppercase; font-size:clamp(56px,12vw,168px); line-height:.84; letter-spacing:-.035em}
+.v-hero .credit{position:absolute; right:var(--gutter); bottom:clamp(28px,4vw,48px); text-align:right; font-size:13px; color:var(--v-muted)}
+.v-hero .credit em{color:#E4E1D6}
+.v-hero .v-date{margin:.9em 0 0; font-size:clamp(15px,1.4vw,18px); color:var(--v-muted)}
+
+.v-section{display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:var(--gutter); padding:clamp(40px,6vw,80px) 0; border-bottom:1px solid var(--v-rule)}
+.v-section h2{margin:0; font-size:clamp(22px,2.2vw,30px); line-height:1.15; font-weight:700; position:sticky; top:24px; align-self:start}
+.v-body{max-width:var(--measure); font-size:18px; line-height:1.65}
+.v-body p{margin:0 0 1.1em}
+.v-body .beat{font-weight:800; font-size:22px; margin:1.4em 0}
+.v-body sup a{text-decoration:none; color:var(--v-accent); font-size:.75em; padding:0 1px}
+.sign-off{font-weight:700}
+
+/* from -> to : the one orchestrated moment */
+.ft{margin:clamp(36px,5vw,56px) 0; padding-top:16px; border-top:1px solid var(--v-rule)}
+.ft-label{font-size:15px; color:var(--v-muted); margin:0 0 14px}
+.ft-row{display:grid; grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr); align-items:center; gap:16px}
+.ft-from,.ft-to{font-size:clamp(22px,2.6vw,34px); line-height:1.12; font-weight:700; letter-spacing:-.01em}
+.ft-from{position:relative; justify-self:start; transition:color .6s ease .2s}
+.ft-from .strike{background:linear-gradient(currentColor,currentColor) no-repeat 0 58% / 0% 2px; -webkit-box-decoration-break:clone; box-decoration-break:clone; transition:background-size .6s cubic-bezier(.6,0,.2,1)}
+.ft-arrow{width:72px; height:20px; overflow:visible}
+.ft-arrow path{fill:none; stroke:var(--v-accent); stroke-width:1.5; stroke-dasharray:90; stroke-dashoffset:90; transition:stroke-dashoffset .5s ease .5s}
+.ft-to{opacity:0; transform:translateY(6px); transition:opacity .7s ease .95s, transform .7s ease .95s; color:#F2EFE4}
+.ft.on .ft-from{color:var(--v-muted)}
+.ft.on .ft-from .strike{background-size:100% 2px}
+.ft.on .ft-arrow path{stroke-dashoffset:0}
+.ft.on .ft-to{opacity:1; transform:none}
+.ft-gloss{margin:18px 0 0; color:#CFCBBE}
+
+.refs{font-size:15px; line-height:1.55; color:#CFCBBE; padding-left:1.4em; margin:0}
+.refs li{margin:0 0 .9em; scroll-margin-top:24px}
+.refs li:target, .refs li.flash{color:#F2EFE4}
+
+/* ---------- footer ---------- */
+.site-foot{border-top:1px solid var(--ink); padding:clamp(40px,6vw,72px) 0 clamp(28px,4vw,40px)}
+.foot-grid{display:grid; grid-template-columns:minmax(0,4fr) minmax(0,2fr) minmax(0,3fr) minmax(0,4fr); gap:var(--gutter)}
+.foot-grid h3{font-size:14px; font-weight:500; color:var(--muted); margin:0 0 12px}
+.foot-grid ul{list-style:none; margin:0; padding:0}
+.foot-grid li{margin:0 0 8px}
+.foot-grid li a{text-decoration:none; font-weight:500}
+.foot-grid li a:hover{text-decoration:underline}
+.seal{display:block; width:64px; height:auto; color:var(--ink)}
+.foot-id p{margin:12px 0 0; font-size:14px; color:var(--muted); max-width:30ch}
+.signup{display:grid; gap:10px}
+.signup .row2{gap:10px}
+.signup input{font:inherit; font-size:15px; color:var(--ink); background:transparent; border:0; border-bottom:1px solid var(--ink); padding:8px 0; border-radius:0; width:100%}
+.signup input:focus{outline:none; border-color:var(--accent)}
+.signup .btn{padding:12px 16px; font-size:14px}
+.foot-base{margin-top:clamp(36px,5vw,56px); padding-top:16px; border-top:1px solid var(--rule); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--muted)}
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px){
+  .plaques{grid-template-columns:1fr; max-width:560px}
+  .plaque .brand{aspect-ratio:auto; min-height:300px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 760px){
+  body{font-size:17px}
+  .thesis,.gallery-head,.split,.v-section{grid-template-columns:1fr}
+  .v-section h2{position:static}
+  .ft-row{grid-template-columns:1fr; gap:10px}
+  .ft-arrow{transform:rotate(90deg); transform-origin:center; width:28px; margin-left:4px}
+  .row2{grid-template-columns:1fr}
+  .v-hero .credit{position:static; text-align:left; margin-top:20px}
+}
+@media (max-width: 520px){
+  .foot-grid{grid-template-columns:1fr}
+  .nav{gap:14px; font-size:14px}
+}
+@media (prefers-reduced-motion: reduce){
+  .mark-animate:hover .mark-node, .mark-animate:focus-within .mark-node{transform:none}
+  *,*::before,*::after{transition:none!important; animation:none!important}
+  .ft .ft-from{color:var(--v-muted)}
+  .ft .ft-from .strike{background-size:100% 2px}
+  .ft .ft-arrow path{stroke-dashoffset:0}
+  .ft .ft-to{opacity:1; transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="wordmark-sm" href="#/" aria-label="Endemic, home">ENDEMIC</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#/vision" data-nav="vision">Vision</a>
+      <a href="#/work-with-us" data-nav="work">Work with us</a>
+      <a href="#/donate" data-nav="donate">Donate</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================= HOME ======================= -->
+<main id="page-home" class="page" aria-label="Home">
+  <section class="inscription wrap">
+    <h1>Endemic</h1>
+    <div class="rule" aria-hidden="true"></div>
+  </section>
+
+  <section class="thesis wrap">
+    <p class="tagline">Building next-gen education institutions and R&amp;D ecosystems</p>
+    <div class="statement">
+      <p>The scarcest asset of the coming decades won’t be capital or compute. It will be talent that can work together, hold and defend a shared vision over years, and deliver outcomes.</p>
+      <p>Many people fear AI will leave us with nothing to do. We see the opposite: AI changes what a small, aligned team can accomplish, and the bottleneck shifts to judgment, leadership, coordination, and dedication.</p>
+      <p>Endemic builds the institutions that produce that talent. We are working to establish them as a public-private partnership with a host city, anchored by a physical campus.</p>
+    </div>
+  </section>
+
+  <section class="gallery wrap" aria-labelledby="gallery-title">
+    <div class="gallery-head">
+      <h2 id="gallery-title">Schools and labs</h2>
+      <p>Each one runs its own programs and builds its own community. Endemic builds the shared institution around them.</p>
+    </div>
+
+    <div class="plaques">
+
+      <!-- The Divinity School -->
+      <article class="plaque" id="tds" aria-labelledby="tds-name">
+        <div class="brand brand-tds">
+          <svg class="mark" viewBox="0 0 56 56" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1" width="54" height="54"/><rect x="9" y="9" width="38" height="38"/><rect x="17" y="17" width="22" height="22"/><rect x="24.5" y="24.5" width="7" height="7" fill="currentColor"/></g></svg>
+          <div>
+            <h3 class="name" id="tds-name">The Divinity School</h3>
+            <p class="line">Biological intelligence, machine agency, and scientific institutional leadership.</p>
+          </div>
+        </div>
+        <dl class="meta">
+          <div><dt>Type</dt><dd>Master’s degree</dd></div>
+          <div><dt>Stage</dt><dd>In development</dd></div>
+        </dl>
+        <div class="actions">
+          <button class="status-toggle" aria-expanded="false" aria-controls="tds-report">Status report <span class="sign" aria-hidden="true">+</span></button>
+          <a href="https://thedivinityschool.endemic.org" target="_blank" rel="noopener">Visit site</a>
+        </div>
+        <div class="report" id="tds-report" hidden>
+          <dl>
+            <dt>Where we are</dt>
+            <dd>Building academic and editorial infrastructure toward a degree program.</dd>
+            <dt>Done</dt>
+            <dd><ul>
+              <li>Convened a conference on biological intelligence and machine agency in Cambridge, MA (May 2026).</li>
+              <li>Established an academic directorship.</li>
+              <li>Assembled contributors for the anthology <i>Horizons of Biological Intelligence &amp; Naturalizing Machine Agency</i>.</li>
+            </ul></dd>
+            <dt>Next</dt>
+            <dd><ul>
+              <li>Publish the anthology (November 2026).</li>
+              <li>Develop a globally accredited Master’s in Scientific Institutional Leadership.</li>
+            </ul></dd>
+            <dt>Needed</dt>
+            <dd class="todo">To be added.</dd>
+          </dl>
+          <p class="stamp">Updated October 2026</p>
+        </div>
+      </article>
+
+      <!-- The Uncontainability Project -->
+      <article class="plaque" id="unc" aria-label="The Uncontainability Project">
+        <div class="brand brand-unc mark-animate">
+          <div class="lockup">
+            <svg class="unc-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true"><g transform="translate(2,8)"><circle class="mark-fill" cx="30" cy="34" r="19.5" fill="#1a1a6e"/><path d="M 49.43 32.3 A 19.5 19.5 0 1 1 35.05 15.16" stroke="#1a1a6e" stroke-width="5.5" stroke-linecap="butt"/><path d="M 42.5 33.78 A 12.5 12.5 0 1 1 32.39 21.73" stroke="#1a1a6e" stroke-width="1.6" stroke-linecap="butt" opacity="0.32"/><circle class="mark-node" cx="50.45" cy="16.84" r="5.4" fill="#1a1a6e"/></g></svg>
+            <span class="kicker">The Uncontainability Project</span>
+          </div>
+          <div>
+            <h3 class="name" id="unc-name">Explore the <em>knowable limits.</em></h3>
+            <p class="line">A curated index of formal proofs and impossibility results on the limits of AI alignment, containment, and verification.</p>
+            <p class="domain">agiuncontainability.org</p>
+          </div>
+        </div>
+        <dl class="meta">
+          <div><dt>Type</dt><dd>Field building</dd></div>
+          <div><dt>Stage</dt><dd>Active</dd></div>
+        </dl>
+        <div class="actions">
+          <button class="status-toggle" aria-expanded="false" aria-controls="unc-report">Status report <span class="sign" aria-hidden="true">+</span></button>
+          <a href="https://agiuncontainability.org" target="_blank" rel="noopener">Visit site</a>
+        </div>
+        <div class="report" id="unc-report" hidden>
+          <dl>
+            <dt>Where we are</dt>
+            <dd>Building the field of AI uncontainability research.</dd>
+            <dt>Done</dt>
+            <dd><ul><li>Launched the Uncontainability Index, a curated index of formal proofs and impossibility results on the limits of AI alignment, containment, and verification.</li><li>Built the project’s public presence, including a merch line.</li></ul></dd>
+            <dt>Next</dt>
+            <dd class="todo">To be added.</dd>
+            <dt>Needed</dt>
+            <dd class="todo">To be added.</dd>
+          </dl>
+          <p class="stamp">Updated October 2026</p>
+        </div>
+      </article>
+
+      <!-- Endemic Culinary Institute -->
+      <article class="plaque" id="eci" aria-label="Endemic Culinary Institute">
+        <div class="brand brand-eci">
+          <video class="bg-video" data-inview muted loop playsinline preload="auto" aria-hidden="true" poster="/assets/culinary-poster.jpg">
+            <source src="/assets/culinary-hero.mp4" type="video/mp4">
+          </video>
+          <span class="wordmark">Endemic Culinary Institute</span>
+          <div>
+            <h3 class="name" id="eci-name">Chefs as Regenerative Agents</h3>
+            <p class="line">Training chefs who rebuild local food systems, reconnect communities, and create the infrastructure for ecological and cultural rejuvenation.</p>
+          </div>
+        </div>
+        <dl class="meta">
+          <div><dt>Type</dt><dd>School</dd></div>
+          <div><dt>Stage</dt><dd>To be confirmed</dd></div>
+        </dl>
+        <div class="actions">
+          <button class="status-toggle" aria-expanded="false" aria-controls="eci-report">Status report <span class="sign" aria-hidden="true">+</span></button>
+          <a href="https://culinary.endemic.org" target="_blank" rel="noopener">Visit site</a>
+        </div>
+        <div class="report" id="eci-report" hidden>
+          <dl>
+            <dt>Where we are</dt><dd class="todo">To be added.</dd>
+            <dt>Done</dt><dd class="todo">To be added.</dd>
+            <dt>Next</dt><dd class="todo">To be added.</dd>
+            <dt>Needed</dt><dd class="todo">To be added.</dd>
+          </dl>
+          <p class="stamp">Updated October 2026</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<!-- ======================= VISION ======================= -->
+<main id="page-vision" class="page" aria-label="Vision">
+  <section class="v-hero">
+    <div class="v-art">
+      <img src="/assets/janu.jpg" alt="Janu, a print by Kaljo Põllu: a face above a lake landscape, cupped hands letting seeds fall" width="1800" height="1268">
+    </div>
+    <div class="wrap">
+      <p class="kicker">/Belonging to place</p>
+      <h1>Endemic</h1>
+      <p class="v-date">An essay by the Endemic team, written in <time datetime="2022">2022</time></p>
+      <p class="credit">Artwork: <em>Janu</em>, Kaljo Põllu</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="v-section">
+      <h2>Summary</h2>
+      <div class="v-body">
+        <p>Our dominant cultures are based in the desire to transform complex nature into complicated objects for the sake of control. This, combined with the ever-increasing rate of change we are experiencing, is significantly hurting our ability to make sense of our worlds. The most fundamental life experience we have is the capacity to choose, but how do we choose well when we don't understand the contexts we live in and the objects we interact with every day? Endemic will never tell anyone what to choose, however we will support the development of participants' inner guidance and capacity to continually shift their paradigm to re-integrate their sensing, desires, and actions with the complex living world so that they can help grow a new, life-generating culture.</p>
+      </div>
+    </section>
+
+    <section class="v-section">
+      <h2>Introduction: a brief history of alienation</h2>
+      <div class="v-body">
+        <p>Many thousands of years ago, humans slowly transitioned from generally nomadic hunter-gatherer cultures to generally stationary agricultural societies. Although regional civilizations which shared culture and infrastructure existed before this transition<sup><a href="#/vision" data-ref="ref1">1</a></sup>, the change enabled the rise of highly stratified, specialized societies that prioritized groups' abilities to predict, control, record, and reason about their environments' natural cycles to a greater degree than ever before. Dams and irrigation were built to control the flood patterns of large rivers. Writing was put to use to record and collect taxes. Class hierarchies became more differentiated and rigid. Inequality expanded. Matriarchies became less common, while patriarchies became more common. Even the Divine was transformed, eventually from localized and multiple spiritual agents embedded in sensory experiences and landscapes to more abstract figures that represented generalized character traits and eventually again to paternal gods who ruled alone or far above all others.</p>
+        <p>Similarly, and increasingly over recent history, global monoculture became more and more dominant.</p>
+        <p class="beat">Time accelerated.</p>
+        <p>Technological innovation built on technological innovation, more and more quickly empowering humans to have more and more control of their environments. The agricultural revolution, the industrial revolution, and the cybernetic revolution all contributed to speed this process up even further. The future is coming faster and for 50 years it's already been cliche to say it's hard to handle.<sup><a href="#/vision" data-ref="ref2">2</a></sup></p>
+        <p>While many cultures from the far past until now do not demonstrate all of these characteristics, in terms of popularity and power, these did become the dominant features of cultures around the world.<sup><a href="#/vision" data-ref="ref3">3</a></sup></p>
+        <p>For the moment, let's hold off on judging these significant transitions as either good or bad (obviously the answer must be both, in different ways, at different times, for different people). Regardless of whether they ought to, some of the basic patterns underlying these transformations are now running their course. Our global civilization itself is coming to an end. Significantly, but not solely, this is due to the ongoing biodiversity loss and dangerously rising global temperatures caused by our recent habits of burning fossil fuels for energy and replacing mature ecosystems with cities and terraformed land. In addition to resource wars, mass migrations, and ecosystem collapse due to climate change, some of the potential proximate causes of the end of our current age may include social unrest due to unprecedented levels of inequality, the decline of institutional authority and effectiveness, increasingly easy access to increasingly dangerous weapons, and the accidental loss of control of automated systems that we come to rely on for more and more maintenance of our basic social and physical infrastructures.<sup><a href="#/vision" data-ref="ref4">4</a></sup></p>
+        <p>Major transformations, and even collapses, of complex societies are not new or uncommon events in human history (or in natural history). Almost all human cultures that have ever existed are now extinct, almost all species that have ever lived are as well. However, due to the deeply, globally entangled nature of complex societies today, the risks of anthropogenic planetary-scale collapse are profound and entirely unique.</p>
+        <p>We are clearly in a new transition out of the ways we have been human together in the relatively recent past. Yet this is not The End. There will almost certainly be a renewal, as there has been during every collapse and extinction event in the past. We aren't yet screwing up the world so badly that the bacterial basis of Gaia is irreparably damaged.</p>
+        <p>Some think this transition will lead to a new mode of economics or governance (equivalent to the move from feudalism to capitalism or the move from monarchies to parliamentary republics). Some think the transition will be deeper, transforming our basic modes of production, i.e. from hunter-gatherer to farmer to industrial worker to knowledge worker.<sup><a href="#/vision" data-ref="ref5">5</a></sup> There are even some, and we are in this camp, who think the transition we are in may be deeper still than that, at the scale of our identity as "humans," the relative eminence of language, and our understandings of the natures of time, change, and causality.<sup><a href="#/vision" data-ref="ref6">6</a></sup></p>
+      </div>
+    </section>
+
+    <section class="v-section">
+      <h2>The transformations Endemic is enabling</h2>
+      <div class="v-body">
+        <p>It is not only that we expect these things to change; it is also that we wish to shape the ways they change to create a more beautiful world. Perhaps, and why shouldn't we aspire to this, one that is even more beautiful for more beings than the world has ever been. One that has more life, both literally in that there are more, and more diverse, living beings, but also that these beings experience more vitality, more depth and intimacy, more creativity than has been possible before. Endemic is fundamentally a learning culture, and our mission is to create a new culture of learning that prioritizes specific values that we think support humans in making this transition.</p>
+        <p>Let's bring the judgment back in. While societies from early agricultural to our contemporary digital world have brought many benefits, we believe that they have also accelerated negative characteristics that we now may have an opportunity to reform.</p>
+
+        <div class="ft" data-ft>
+          <p class="ft-label">At the highest level, we aim to contribute to a transition from</p>
+          <div class="ft-row">
+            <span class="ft-from"><span class="strike">Alienated Societies</span></span>
+            <svg class="ft-arrow" viewBox="0 0 72 20" aria-hidden="true"><path d="M0 10 H68 M60 3 L68 10 L60 17"/></svg>
+            <span class="ft-to"><span class="visually-hidden">to </span>Sacred Societies</span>
+          </div>
+          <p class="ft-gloss">Over the past several thousand years we have increasingly dissociated ourselves from the basic cycles and relationships with "Nature," including our bodies and physical senses, out of which we grew and upon which we still depend. Widespread shame, depression and loneliness are the results of this loss of connection with our wild nature in a civilized society. Instead, we aim to encourage the transition to societies that, by coming back into deeper, mutually generative relationship with all natural organisms and rhythms, will once again feel like we are "at home," that we belong here, and that this place is ours to care for as we would a member of our family.<sup><a href="#/vision" data-ref="ref7">7</a></sup></p>
+        </div>
+
+        <p>As a learning culture, Endemic aims to influence several other contributing transformations directly:</p>
+
+        <div class="ft" data-ft>
+          <p class="ft-label">Transforming the ideal of maturity and trustability from</p>
+          <div class="ft-row">
+            <span class="ft-from"><span class="strike">Abstracted Rationality</span></span>
+            <svg class="ft-arrow" viewBox="0 0 72 20" aria-hidden="true"><path d="M0 10 H68 M60 3 L68 10 L60 17"/></svg>
+            <span class="ft-to"><span class="visually-hidden">to </span>Intuition + Reasoning</span>
+          </div>
+        </div>
+
+        <div class="ft" data-ft>
+          <p class="ft-label">Transforming education’s purpose from the regeneration of</p>
+          <div class="ft-row">
+            <span class="ft-from"><span class="strike">Meaningless Jobs</span></span>
+            <svg class="ft-arrow" viewBox="0 0 72 20" aria-hidden="true"><path d="M0 10 H68 M60 3 L68 10 L60 17"/></svg>
+            <span class="ft-to"><span class="visually-hidden">to </span>Relevant Contributions &amp; Empowered Makers</span>
+          </div>
+        </div>
+
+        <div class="ft" data-ft>
+          <p class="ft-label">Transforming cultures’ highest value from</p>
+          <div class="ft-row">
+            <span class="ft-from"><span class="strike">Generating safety on the basis of control</span></span>
+            <svg class="ft-arrow" viewBox="0 0 72 20" aria-hidden="true"><path d="M0 10 H68 M60 3 L68 10 L60 17"/></svg>
+            <span class="ft-to"><span class="visually-hidden">to </span>Optimizing for the generation of Life</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="v-section">
+      <h2>Conclusion: civilization renewal</h2>
+      <div class="v-body">
+        <p>Things are falling apart, and that's a good thing. Whereas others may set for themselves the goal of preventing large scale collapse, our intention is rather to simultaneously 1) facilitate as harmonious a collapse as possible and 2) steward a culture that can contribute to the renewal of a healthier civilization that integrates the virtues of both intrinsic participation in the life-generative patterns of nature and their intelligent, conscious stewardship for even more life.</p>
+        <p>Endemic is a developmental community that aims to curate a smooth path from our current superficial culture, through collapse, to a more authentic, more practical, healthier, more experimental culture on the other side, and that honors where people are on that path and encourages them to continue deepening into it.</p>
+        <p class="sign-off">The Endemic team, <time datetime="2022">2022</time></p>
+      </div>
+    </section>
+
+    <section class="v-section">
+      <h2>References</h2>
+      <ol class="refs">
+        <li id="ref1">Mann, C. C. (2011, June). The Birth of Religion. National Geographic. Retrieved February 15, 2021, https://www.nationalgeographic.com/magazine/article/gobeki-tepe.</li>
+        <li id="ref2">Toffler, A. (1970). Future Shock. Random House US.</li>
+        <li id="ref3">Eisler, R. T. (2019). The Chalice and the Blade: Our History, our Future. New York: Harper &amp; Row.; Lent, J. R. (2017). The Patterning Instinct: A Cultural History of Humanity's Search for Meaning. Amherst, NY: Prometheus Books.; McGilchrist, I. (2019). The Master and his Emissary the Divided Brain and the Making of the Western world. New Haven: Yale University Press.</li>
+        <li id="ref4">A growing field of researchers are grappling with the histories and possible features of this civilizational collapse. Scholars generally fall into rough camps, including those who 1) do not think collapse is happening, 2) that it might happen in the future, 3) that it will happen but that we are not there yet, 4) that it is happening and we are in the early stages, and 5) that it is happening and we are significantly into the process, but that we have not yet seen the worst effects and do not know how deep it's going to go. cf. Diamond, J. M. (2011). Collapse how societies choose to fail or succeed. New York: Penguin.; Turchin, P. (2018). Historical Dynamics: Why States Rise and Fall. Princeton University Press.; Tainter, J. A. (1990). The Collapse of Complex Societies. Cambridge University Press.; Ord, T. (2020). The Precipice: Existential Risk and the Future of Humanity. Hachette Books.; Bendell, J. (2018). "Deep Adaptation: A Map for Navigating Climate Tragedy." IFLAS Occasional Paper 2.; Orlowski, J. (Director). (2020). The Social Dilemma [Film]. Exposure Labs.; Russell, S. (2020). Human Compatible: Artificial Intelligence and the Problem of Control. Penguin Books.</li>
+        <li id="ref5">Karatani, K., &amp; Bourdaghs, M. K. (2014). The Structure of World History: From Modes of Production to Modes of Exchange. Duke University Press Books.</li>
+        <li id="ref6">Roy, B. (unpublished essay). "Time, Change, Causality: Notes Toward a Metamorphosis of Mind."</li>
+        <li id="ref7">Anderson, K. M. (2013). Tending the Wild: Native American Knowledge and the Management of California’s Natural Resources. University of California Press.</li>
+      </ol>
+    </section>
+  </div>
+</main>
+
+<!-- ======================= WORK WITH US ======================= -->
+<main id="page-work" class="page" aria-label="Work with us">
+  <section class="interior wrap">
+    <h1>Work with us</h1>
+    <p class="lede">We partner with cities, funders, and institutions to build schools and labs that last.</p>
+
+    <div class="split">
+      <h2>Ways to partner</h2>
+      <div class="prose">
+        <p><strong>Host cities.</strong> We are looking for a municipal partner to co-establish a physical campus through a public-private partnership.</p>
+        <p><strong>Funders.</strong> Support Endemic’s shared infrastructure, or underwrite a specific school or lab.</p>
+        <p><strong>Institutions.</strong> Universities, research groups, and companies that want to co-develop programs, share faculty, or place talent.</p>
+      </div>
+    </div>
+
+    <div class="split">
+      <h2>Start a conversation</h2>
+      <form class="contact" id="contact-form" novalidate>
+        <div class="row2">
+          <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="c-org">Organization</label><input id="c-org" name="org" autocomplete="organization"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-kind">You are</label>
+            <select id="c-kind" name="kind">
+              <option>A city or public agency</option>
+              <option>A funder</option>
+              <option>An institution</option>
+              <option>Something else</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required></textarea></div>
+        <button class="btn" type="submit">Send message</button>
+        <p class="note">This opens your email app with your message addressed to corey@endemic.org.</p>
+        <p class="form-msg" id="contact-msg" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ======================= DONATE ======================= -->
+<main id="page-donate" class="page" aria-label="Donate">
+  <section class="interior wrap">
+    <h1>Donate</h1>
+    <p class="lede">The opportunity and responsibility we share.</p>
+    <p class="give-jump"><a href="#/donate" data-ref="give">Give now</a></p>
+
+    <div class="donate-grid">
+      <div class="prose donate-essay">
+        <p>Private philanthropy has the capacity and responsibility to make high-intuition, high-risk, long-term bets that are less influenced by technology and market drivers, and decoupled from popularity contests and elite politics. This positions philanthropists as actors in futures that others cannot yet see and enables them to work upstream of the agendas of investors, markets, media, and even governments, bringing opportunities forward that otherwise would not have been feasible to maximize beauty and intelligence, reduce injustices, and enrich humanity.</p>
+        <p>This takes incredible courage, insight, sensitivity, and commitment. It requires Belief.</p>
+        <p>Four hundred years ago, education underwent a transformation. “New technological and economic changes were outpacing the thinking of the [political] leaders.” Traditional worldviews that once unified all knowledge and belief were fragmenting under emerging methods of knowledge production. The revolutionary technology was the printing press, the emerging economic system was capitalism, and the new methodology for producing knowledge was empirical science.</p>
+        <p>Unfortunately, the opportunity for an integrative “education-centric social system… that would place human development and the free flow of information at the center of social life on a global scale” was coopted by “capital and the nation state upgrading and expanding school bureaucracies and improving the reach of public education as part of building national economies.”</p>
+        <p>All of this is happening again with a similar revolution in technology, economic system, and knowledge production. If individuals and institutions continue to make easy, safe, known choices, if we continue to build on top of the legacy system, the resulting transformations will involve increasingly general, but superficial “AI” used to enforce a global techno-feudalism, and that, when applied to scientific research, will produce empirically validated knowledge, while reducing humans’ cognitive capacity and prioritizing economic consolidation over the creative discovery of novel paradigms.</p>
+        <p>We need novel education institutions working to integrate “new sciences, as well as religious aspects of human culture… for the design of educational configurations capable of catalyzing a universal reform of all human institutions.” Endemic builds them. Our schools and labs, <a href="#/p/tds">The Divinity School</a>, <a href="#/p/unc">The Uncontainability Project</a>, and <a href="#/p/eci">Endemic Culinary Institute</a>, are early examples of this new kind of institution: each forms people who can see deeper into reality, make decisions that benefit the whole, and hold a shared vision long enough to deliver on it.</p>
+        <p>If they succeed, instead of the technocracy described above, the resulting civilization will be undergirded by an increasing sensitivity to relationship. The key technological innovation will be systems that better surface, coordinate, and develop the perceptions and insights of individuals and communities. The economy will dramatically increase innovation contextualized to local environments and values, and knowledge production will deepen our intuitive capacities and embodied, sensory integration with the world around us.</p>
+        <p>Endemic’s role is to give these institutions what they cannot build alone: partnerships with host cities, a shared physical campus, and the operating backbone that lets each one last. The people working across our schools and labs are already piercing existing paradigms with tools and policies that guide us toward life-affirming futures.</p>
+        <p>There are great and terrible opportunities ahead. In the coming years, fundamental questions will be reconsidered: What is life? What place do feeling and emotion hold in decision-making? How will religion, community, and spiritual life thrive amid radical technological change? What is humanity for? The answers that gain prominence will shape everything.</p>
+        <p>When the first benefactors endowed Oxford or MIT, they could never have foreseen antibiotics, silicon chips, or space telescopes. Likewise, we cannot predict every breakthrough that will emerge from Endemic’s institutions. What we can promise is that our work will guide institutions toward technologies, policies, and infrastructure that should be built in every conceivable future.</p>
+        <p>All gifts are stewarded through Better Giving, our 501(c)(3) fiscal sponsor, and are tax-deductible in the United States. To direct your gift to a specific school or lab, note it with your gift. <a href="#/work-with-us">Contact us</a> to learn more about our plan for the next four hundred years.</p>
+        <p class="donate-ref">Reference: Stein, Z. (2022). <i>Education must make history again: Remembering Comenius in a time between worlds.</i> Perspectiva Press.</p>
+      </div>
+
+      <aside class="donate-form" id="give" aria-label="Donation form">
+        <iframe title="Donate to Endemic" src="https://better.giving/donate-widget/1293782?isDescriptionTextShown=true&amp;methods=stripe%2Cstocks%2Cdaf%2Ccrypto&amp;isTitleShown=true&amp;title=Endemic&amp;description=Building+next-gen+education+institutions+and+R%26D+ecosystems.&amp;accentPrimary=%233B5B47&amp;accentSecondary=%2393B79E&amp;increments=40%2C100%2C300%2C500&amp;descriptions=%2C%2C%2C" allow="payment" loading="lazy"></iframe>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-id">
+        <!-- Endemic emblem (original vector) -->
+        <svg class="seal" role="img" aria-label="Endemic emblem" viewBox="0 0 296.9 323.6"><path fill="currentColor" d="m148.4,251.9c-3.5,0-7.7-1.7-9.6-5.4s-1.9-5.6-1.4-8.5c.5-2.7,1.5-5.3,2.5-7.8s1.9-4.5,3.1-6.7,1.8-3.3,2.9-4.7,1.5-1.9,2.6-1.9c1.1,0,2,1.2,2.6,1.9,1.2,1.4,2.1,3.1,2.9,4.7s2.1,4.4,3.1,6.7,2,5.1,2.5,7.8c.5,2.8,0,5.9-1.4,8.5-2,3.7-6.1,5.4-9.6,5.4h0Z"/><path fill="currentColor" d="m148.4,323.6c-.3,0-.7,0-.7-1.2,0-57.3-31.2-64.2-49.3-64.2-14.1,0-37.6,5.6-50.5,5.6-17.1,0-26.6-7.3-33.6-7.3-5.6,0-9.3,3.8-9.3,9.6s1.5,6.5,2.9,7.3,1.8,1.5,1.8,2.3-.4,1.6-2,1.6c-2.9,0-7.7-4.1-7.7-11.2,0-7,6.1-14.1,14.2-14.1s10.6,3.5,12.5,3.5-.5-3.1-.5-6.6c0-9.2,8.7-11.6,11.8-11.6,3.1,0,7.3,1.5,9.3,4.2,2,2.7-3.4,2-3.9,1.6-1.2-1-2-2-5.4-2-3.4,0-7.6,2.3-7.6,7.9,0,5.9,1.1,9.8,17.5,9.8,29.2,0,24.1-9.5,50.4-9.5,27.7,0,29.2,15.1,50.1,15.1,20.9,0,22.4-15.1,50.1-15.1s21.3,9.5,50.4,9.5,17.5-3.9,17.5-9.8-4.2-7.9-7.6-7.9-4.1,1.1-5.4,2-5.9,1.1-3.9-1.6,6.2-4.2,9.3-4.2,11.9,2.4,11.8,11.6c0,3.5-1.7,6.6-.5,6.6,1.9,0,4.4-3.5,12.5-3.5s14.2,7.1,14.2,14.1-4.9,11.2-7.7,11.2-2-.9-2-1.6.9-1.8,1.8-2.3c1.5-.8,2.9-1.5,2.9-7.3s-3.6-9.6-9.3-9.6-16.5,7.3-33.6,7.3-36.4-5.6-50.5-5.6-49.3,6.9-49.3,64.2-.4,1.2-.7,1.2Z"/><path fill="currentColor" d="m208.4,141.2c14.5-15,23.4-35.4,23.4-57.8s-8.9-42.8-23.4-57.8l4.2-4.2c.6-.6.6-1.5,0-2.1s-1.5-.6-2.1,0l-4.2,4.2C191.3,8.9,170.9,0,148.5,0s-42.8,8.9-57.8,23.4l-4.2-4.2c-.6-.6-1.5-.6-2.1,0s-.6,1.5,0,2.1l4.2,4.2c-14.5,15-23.4,35.4-23.4,57.8s8.9,42.8,23.4,57.8l-4.2,4.2c-.6.6-.6,1.5,0,2.1s.7.4,1.1.4.8-.1,1.1-.4l4.2-4.2c14.7,14.2,34.5,23,56.3,23.4v36.3c0,.8.7,1.5,1.5,1.5s1.5-.7,1.5-1.5v-36.3c21.9-.4,41.7-9.2,56.3-23.4l4.2,4.2c.3.3.7.4,1.1.4s.8-.1,1.1-.4c.6-.6.6-1.5,0-2.1l-4.2-4.2Zm-8.4-109.5c.3.3.7.4,1.1.4s.8-.1,1.1-.4l4.1-4.1c13.6,14.1,22,33,22.5,54h-.2c-3.6-1.7-6.7-3.6-9.7-5.5-6.4-4-13-8.1-23.7-8.1-15.9,0-24.4,5-32.8,12.6-1.5-1.4-3-2.9-4.6-4.5l-2.2-2.2c-1.6-1.6-3.1-3.1-4.5-4.6,7.6-8.4,12.6-16.9,12.6-32.8s-4.1-17.3-8.1-23.7c-1.9-3-3.8-6.1-5.4-9.7v-.2c20.8.4,39.8,8.9,53.9,22.5l-4.1,4.1c-.6.6-.6,1.5,0,2.1Zm23.2,51.6c-2.3,1.2-4.4,2.5-6.5,3.8-6.5,4-12,7.5-21.5,7.5-14.4,0-21.9-4.1-29.9-11.3,7.9-7.2,15.4-11.3,29.9-11.3s15.1,3.5,21.5,7.5c2.1,1.3,4.2,2.6,6.5,3.8Zm-78.6,68.3c-4-6.5-7.5-12-7.5-21.5,0-14.4,4.1-21.9,11.3-29.9,7.2,7.9,11.3,15.4,11.3,29.9s-3.5,15.1-7.5,21.5c-1.3,2.1-2.6,4.2-3.8,6.5-1.2-2.3-2.5-4.4-3.8-6.5Zm-.6-61.7l-2.2-2.2c-1.5-1.5-3-3-4.5-4.4,1.5-1.4,2.9-2.9,4.5-4.4l2.2-2.2c1.5-1.5,3-3,4.4-4.5,1.4,1.5,2.9,2.9,4.4,4.5l2.2,2.2c1.5,1.5,3,3,4.5,4.4-1.5,1.4-2.9,2.9-4.5,4.4l-2.2,2.2c-1.5,1.5-3,3-4.4,4.5-1.4-1.5-2.9-2.9-4.4-4.5Zm8.3-75c4,6.5,7.5,12,7.5,21.5,0,14.4-4.1,21.9-11.3,29.9-7.2-7.9-11.3-15.4-11.3-29.9s3.5-15.1,7.5-21.5c1.3-2.1,2.6-4.2,3.8-6.5,1.2,2.3,2.5,4.4,3.8,6.5Zm-57.6,16.7c.3.3.7.4,1.1.4s.8-.1,1.1-.4c.6-.6.6-1.5,0-2.1l-4.1-4.1c14.1-13.6,33-22,54-22.5v.2c-1.7,3.6-3.6,6.7-5.5,9.7-4,6.4-8.1,13-8.1,23.7,0,15.9,5,24.4,12.6,32.8-1.4,1.5-2.9,3-4.5,4.6l-2.2,2.2c-1.6,1.6-3.1,3.1-4.6,4.5-8.4-7.6-16.9-12.6-32.8-12.6s-17.3,4.1-23.7,8.1c-3,1.9-6.1,3.8-9.7,5.4h-.2c.4-20.8,8.9-39.8,22.5-53.9l4.1,4.1Zm36.8,51.6c-8,7.2-15.4,11.3-29.9,11.3s-15.1-3.5-21.5-7.5c-2.1-1.3-4.2-2.6-6.5-3.8,2.3-1.2,4.4-2.5,6.5-3.8,6.5-4,12-7.5,21.5-7.5,14.4,0,21.9,4.1,29.9,11.3Zm-34.7,51.6c-.6-.6-1.5-.6-2.1,0l-4.1,4.1c-13.6-14.1-22-33-22.5-54h.2c3.6,1.7,6.7,3.6,9.7,5.5,6.4,4,13,8.1,23.7,8.1,15.9,0,24.4-5,32.8-12.6,1.5,1.4,3,2.9,4.6,4.5l2.2,2.2c1.6,1.6,3.1,3.1,4.5,4.6-7.6,8.4-12.6,16.9-12.6,32.8s4.1,17.3,8.1,23.7c1.9,3,3.8,6.1,5.4,9.7v.2c-20.8-.4-39.8-8.9-53.9-22.5l4.1-4.1c.6-.6.6-1.5,0-2.1Zm53.4,28.7v-.2c1.7-3.6,3.6-6.7,5.5-9.7,4-6.4,8.1-13,8.1-23.7,0-15.9-5-24.4-12.6-32.8,1.4-1.5,2.9-3,4.5-4.6l2.2-2.2c1.6-1.6,3.1-3.1,4.6-4.5,8.4,7.6,16.9,12.6,32.8,12.6s17.3-4.1,23.7-8.1c3-1.9,6.1-3.8,9.7-5.4h.2c-.4,20.8-8.9,39.8-22.5,53.9l-4.1-4.1c-.6-.6-1.5-.6-2.1,0s-.6,1.5,0,2.1l4.1,4.1c-14.1,13.6-33,22-54,22.5Z"/></svg>
+        <p>Endemic builds next-gen education institutions and R&amp;D ecosystems.</p>
+      </div>
+      <div>
+        <h3>Endemic</h3>
+        <ul>
+          <li><a href="#/vision">Vision</a></li>
+          <li><a href="#/work-with-us">Work with us</a></li>
+          <li><a href="#/donate">Donate</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Schools and labs</h3>
+        <ul>
+          <li><a href="#/p/tds">The Divinity School</a></li>
+          <li><a href="#/p/unc">The Uncontainability Project</a></li>
+          <li><a href="#/p/eci">Endemic Culinary Institute</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Updates</h3>
+        <form class="signup" id="signup-form" novalidate>
+          <div class="row2">
+            <label class="visually-hidden" for="s-first">First name</label><input id="s-first" placeholder="First name" autocomplete="given-name">
+            <label class="visually-hidden" for="s-last">Last name</label><input id="s-last" placeholder="Last name" autocomplete="family-name">
+          </div>
+          <label class="visually-hidden" for="s-email">Email</label><input id="s-email" type="email" placeholder="Email" autocomplete="email">
+          <button class="btn" type="submit">Sign up</button>
+          <p class="form-msg" id="signup-msg" role="status"></p>
+        </form>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Endemic</span>
+      <span>Fiscally sponsored by Better Giving</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var pages = {home:'page-home', vision:'page-vision', work:'page-work', donate:'page-donate'};
+  var titles = {home:'Endemic', vision:'Vision · Endemic', work:'Work with us · Endemic', donate:'Donate · Endemic'};
+
+  function setReport(id, open){
+    var p = document.getElementById(id); if(!p) return;
+    var btn = p.querySelector('.status-toggle'), rep = p.querySelector('.report');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    rep.hidden = !open;
+  }
+
+  function route(){
+    var h = location.hash.replace(/^#\/?/, '');
+    var key = 'home', project = null;
+    if (h.indexOf('vision') === 0) key = 'vision';
+    else if (h.indexOf('work-with-us') === 0) key = 'work';
+    else if (h.indexOf('donate') === 0) key = 'donate';
+    else if (h.indexOf('p/') === 0) project = h.slice(2);
+
+    Object.keys(pages).forEach(function(k){
+      document.getElementById(pages[k]).classList.toggle('is-active', k === key);
+    });
+    document.querySelectorAll('[data-nav]').forEach(function(a){
+      if (a.getAttribute('data-nav') === key) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+    document.title = titles[key];
+
+    if (project && document.getElementById(project)){
+      setReport(project, true);
+      requestAnimationFrame(function(){ document.getElementById(project).scrollIntoView({behavior:'smooth', block:'start'}); });
+    } else {
+      window.scrollTo(0,0);
+    }
+    if (key === 'vision') watchTransforms();
+  }
+
+  // status report toggles
+  document.querySelectorAll('.status-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p = btn.closest('.plaque');
+      setReport(p.id, btn.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+  document.querySelectorAll('a[aria-disabled="true"]').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); });
+  });
+
+  // footnotes: scroll within the vision page without breaking the router
+  document.querySelectorAll('[data-ref]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var li = document.getElementById(a.getAttribute('data-ref'));
+      li.scrollIntoView({behavior:'smooth', block:'center'});
+      li.classList.add('flash'); setTimeout(function(){ li.classList.remove('flash'); }, 1800);
+    });
+  });
+
+  // from -> to reveal
+  var io;
+  function watchTransforms(){
+    var items = document.querySelectorAll('[data-ft]');
+    if (!('IntersectionObserver' in window)) { items.forEach(function(el){ el.classList.add('on'); }); return; }
+    if (!io){
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target); } });
+      }, {threshold:.6});
+    }
+    items.forEach(function(el){ if(!el.classList.contains('on')) io.observe(el); });
+  }
+
+  // contact form -> email app (swap for a server function on Vercel later)
+  var cf = document.getElementById('contact-form');
+  cf.addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('contact-msg');
+    var name = cf.name.value.trim(), email = cf.email.value.trim(), body = cf.message.value.trim();
+    if (!name || !email || !body){ msg.textContent = 'Add your name, email, and a message, then send again.'; return; }
+    var subject = 'Endemic inquiry from ' + name + (cf.org.value.trim() ? ' (' + cf.org.value.trim() + ')' : '');
+    var text = body + '\n\n— ' + name + '\n' + email + '\n' + cf.kind.value;
+    location.href = 'mailto:corey@endemic.org?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
+    msg.textContent = 'Your email app should open with the message ready to send.';
+  });
+
+  // newsletter placeholder (platform not chosen yet)
+  document.getElementById('signup-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('signup-msg').textContent = 'Signups open soon. Until then, write to corey@endemic.org.';
+  });
+
+  // fit the inscription to the full column width
+  function fit(){
+    var h = document.querySelector('.inscription h1'); if(!h) return;
+    h.style.fontSize = '';
+    var avail = h.parentElement.clientWidth - parseFloat(getComputedStyle(h.parentElement).paddingLeft) - parseFloat(getComputedStyle(h.parentElement).paddingRight);
+    var size = parseFloat(getComputedStyle(h).fontSize);
+    h.style.fontSize = (size * avail / h.scrollWidth).toFixed(1) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  fit();
+
+  // background videos: play only while on screen, never for reduced-motion visitors
+  (function(){
+    var vids = document.querySelectorAll('video[data-inview]');
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (still || !vids.length) return;
+    if (!('IntersectionObserver' in window)) { vids.forEach(function(v){ v.play().catch(function(){}); }); return; }
+    var vio = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) en.target.play().catch(function(){});
+        else en.target.pause();
+      });
+    }, {threshold:.25});
+    vids.forEach(function(v){ vio.observe(v); });
+  })();
+
+  window.addEventListener('hashchange', function(){ route(); fit(); });
+  route(); fit();
+})();
+</script>
+</body>
+</html>
